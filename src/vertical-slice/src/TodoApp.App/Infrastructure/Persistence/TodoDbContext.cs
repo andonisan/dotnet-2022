@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using TodoApp.App.Infrastructure.Persistence.Configuration;
 using Microsoft.EntityFrameworkCore.Storage;
+using SmartEnum.EFCore;
 
 namespace TodoApp.App.Infrastructure.Persistence
 {
@@ -20,6 +21,7 @@ namespace TodoApp.App.Infrastructure.Persistence
             _connection = connection;
             _mediator = mediator;
         }
+        
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(_connection);
@@ -28,6 +30,8 @@ namespace TodoApp.App.Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.ConfigureSmartEnum();
             
             modelBuilder.ApplyConfiguration(new TodoEntityTypeConfiguration());
         }

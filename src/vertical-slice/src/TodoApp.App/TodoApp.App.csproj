@@ -10,6 +10,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Ardalis.SmartEnum" Version="2.1.0" />
+		<PackageReference Include="Ardalis.SmartEnum.EFCore" Version="2.1.0" />
 		<PackageReference Include="ColoredConsole" Version="1.0.0" />
 		<PackageReference Include="EasyCaching.Core" Version="1.6.0" />
 		<PackageReference Include="EasyCaching.InMemory" Version="1.6.0" />

@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Json;
+using TodoApp.App.Services;
 
 namespace TodoApp.App.Features.Todo.Commands;
 
@@ -13,13 +14,12 @@ public class AssignTodo
     public class Handler : IRequestHandler<Command>
     {
         private readonly TodoDbContext _dbContext;
-        private readonly HttpClient _httpClient;
+        private readonly IEffotCalculator _effotCalculator;
 
-        public Handler(TodoDbContext dbContext,
-            HttpClient httpClient)
+        public Handler(TodoDbContext dbContext, IEffotCalculator effotCalculator)
         {
             _dbContext = dbContext;
-            _httpClient = httpClient;
+            _effotCalculator = effotCalculator;
         }
 
         public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
@@ -36,40 +36,9 @@ public class AssignTodo
                 throw new InvalidOperationException(nameof(developer));
             }
 
-            // MAGIC AND VERY EXPENSIVE External estimator
-            var response = await _httpClient
-                .GetAsync(requestUri: $"/external-api/estimate-work?title={todo.Title}&developer={developer.Mail}",
-                    cancellationToken: cancellationToken);
-            
-            response.EnsureSuccessStatusCode();
-            
-            var daysEffort = await response.Content
-                .ReadFromJsonAsync<int>(cancellationToken: cancellationToken);
+            var daysEffort = await _effotCalculator.GetDaysEffort(todo, developer, cancellationToken);
 
-            // Calculate start expected date
-            DateTime startDateExpected;
-
-            switch (developer.WorkingType)
-            {
-                case WorkingType.Fast:
-                    startDateExpected = DateTime.Today;
-                    break;
-                case WorkingType.Calm:
-                    startDateExpected = DateTime.Today.AddDays(1);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            // Assignment
-            var assignment = new WorkAssignment(
-                developer,
-                todo,
-                daysEffort,
-                startDateExpected);
-
-            developer.WorkAssignments.Add(assignment);
-            developer.NumberOfActiveAssignments++;
+            developer.AssignWork(todo, daysEffort);
 
             await _dbContext.SaveChangesAsync(cancellationToken);
             return Unit.Value;

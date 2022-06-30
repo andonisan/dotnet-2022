@@ -6,15 +6,15 @@ public class WorkAssignment : BaseEntity
     {
         
     }
-    
-    public WorkAssignment(Developer developer, Todo todo, int daysEffort, DateTime startDateExpected)
+
+    public WorkAssignment(Developer developer, Todo todo, int daysEffort)
     {
         Developer = developer;
         Todo = todo;
         DaysEffort = daysEffort;
-        StartDateExpected = startDateExpected;
+        StartDateExpected = developer.WorkingType.GetStartDateExpected();
     }
-    
+
     public Developer Developer { get; private set; }
     public Todo Todo { get; private set; }
     public int DaysEffort { get; private set; }

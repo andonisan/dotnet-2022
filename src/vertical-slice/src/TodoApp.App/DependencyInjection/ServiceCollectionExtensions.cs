@@ -3,6 +3,7 @@ using Hellang.Middleware.ProblemDetails;
 using Microsoft.Extensions.DependencyInjection;
 using TodoApp.App.Common.Behaviors;
 using TodoApp.App.IntegrationEventsModule;
+using TodoApp.App.Services;
 
 namespace TodoApp.App.DependencyInjection
 {
@@ -19,6 +20,8 @@ namespace TodoApp.App.DependencyInjection
                 .AddValidatorsFromAssembly(typeof(App).Assembly)
                 .AddDiagnostics(configuration)
                 .AddMediatR(typeof(App).Assembly);
+
+            services.AddTransient<IEffotCalculator, EffotCalculator>();
 
             //   services.AddBehaviors()
             //    .AddEasyCaching(options => { options.UseInMemory(Cache.CacheDefaultName); });
