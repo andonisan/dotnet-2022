@@ -1,31 +1,28 @@
-﻿
-
-
-using TodoApp.App.Domain.Events;
+﻿using TodoApp.App.Common.Behaviors;
 
 namespace TodoApp.App.Features.Todo.Commands;
 
-public class CompleteTodo : IFeatureModule
+public class CreateTodo : IFeatureModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPut("/todos/{id}/complete",
-                async (string id, IMediator mediator, CancellationToken cancellationToken) =>
+        app.MapPost("/todos",
+                async (Command command, IMediator mediator, CancellationToken cancellationToken) =>
                 {
-                    var request = new Command(id);
-
-                    await mediator.Send(request, cancellationToken);
+                    await mediator.Send(command, cancellationToken);
 
                     return Results.Ok();
                 })
-            .WithName(nameof(CompleteTodo))
+            .WithName(nameof(CreateTodo))
             .WithTags(TodoConstants.TodosFeature)
             .Produces(StatusCodes.Status200OK)
-            .Produces<ProblemDetails>(StatusCodes.Status409Conflict)
-            .Produces(StatusCodes.Status404NotFound);
+            .Produces<ProblemDetails>(StatusCodes.Status409Conflict);
     }
 
-    public record Command(string TodoId) : ICommand;
+    public class Command : ICommand
+    {
+       public string Title { get; set; } 
+     }
 
     public class Handler : IRequestHandler<Command>
     {
@@ -47,18 +44,9 @@ public class CompleteTodo : IFeatureModule
                 throw new ValidationException(result.Errors);
             }
 
-            var todo = await _db.Todos
-                .SingleOrDefaultAsync(x => x.Id == request.TodoId, cancellationToken);
+            var todo = new Domain.Entities.Todo(request.Title);
 
-            if (todo == null)
-            {
-                throw new InvalidOperationException($"Todo {request.TodoId} not found");
-            }
-
-            if (todo.Completed == false)
-            {
-                todo.Completed = true;
-            }
+            await _db.Todos.AddAsync(todo, cancellationToken);
 
             await _db.SaveChangesAsync(cancellationToken);
 
@@ -70,7 +58,7 @@ public class CompleteTodo : IFeatureModule
     {
         public Validator()
         {
-            RuleFor(r => r.TodoId).NotEmpty();
+            RuleFor(r => r.Title).NotEmpty().MinimumLength(10);
         }
     }
 }

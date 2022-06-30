@@ -17,7 +17,7 @@ public class UpdateTodo : IFeatureModule
             .WithName(nameof(UpdateTodo))
             .WithTags(TodoConstants.TodosFeature)
             .Produces(StatusCodes.Status200OK)
-            .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
+            .Produces<ProblemDetails>(StatusCodes.Status409Conflict)
             .Produces(StatusCodes.Status404NotFound);
     }
 
