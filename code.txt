@@ -1,0 +1,59 @@
+// General
+
+0. AddMediator
+1. GetTodos 
+2. Uncomment controller for GetTodos
+3. GetTodos IFeatureModule
+4. CreateTodo
+
+ public record Command(string Title) : ICommand;
+
+ public class Handler : IRequestHandler<Command>{
+
+ public async Task<Unit> Handle(Command request, CancellationToken cancellationToken){
+
+ var todo = new Domain.Entities.Todo(request.Title);
+
+            await _context.AddAsync(todo, cancellationToken);
+
+            await _context.SaveChangesAsync(cancellationToken);
+
+            return Unit.Value;
+}}
+
+public class Validator : AbstractValidator<Command>
+    {
+        public Validator()
+        {
+            RuleFor(r => r.Title).NotEmpty();
+        }
+    }
+
+5. Request Validation on Create Todo MinimumLength(20)
+
+// Refactor DDD
+
+
+// Pipelines
+
+Uncomment Behaiviors
+Caching Behaivior
+GetTodos Add Caching
+Create Todos invalidate caching
+Uncomment ValidationBehaivior
+
+// Events
+
+CompleteTodo Add DomainEvent
+Uncomment IntegrationModule
+TodoCompletedEventHandler  uncomment constructor
+Show DbContext
+Show TransactionBehaivior
+Show Tricky DbContexts
+
+
+// Test 
+
+Show SliceFixture
+Run Tests
+CompleteTodo 

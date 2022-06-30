@@ -1,0 +1,4 @@
+Clean Code - Robert C. Martin
+Headfirst Design Patterns: A Brain-Friendly Guide 
+Domain-Driven Design Distilled - Vaughn Vernon 
+Refactoring to patterns - Joshua Kerievsky
