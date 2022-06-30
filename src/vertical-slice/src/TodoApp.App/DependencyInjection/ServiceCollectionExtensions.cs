@@ -26,7 +26,7 @@ namespace TodoApp.App.DependencyInjection
             services.AddBehaviors()
              .AddEasyCaching(options => { options.UseInMemory(Cache.CacheDefaultName); });
 
-            //  services.AddIntegrationEvents();
+            services.AddIntegrationEvents();
 
             return services;
         }

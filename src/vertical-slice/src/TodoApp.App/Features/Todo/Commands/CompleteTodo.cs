@@ -55,10 +55,7 @@ public class CompleteTodo : IFeatureModule
                 throw new InvalidOperationException($"Todo {request.TodoId} not found");
             }
 
-            if (todo.Completed == false)
-            {
-                todo.Completed = true;
-            }
+            todo.CompleteTodo();
 
             await _db.SaveChangesAsync(cancellationToken);
 
