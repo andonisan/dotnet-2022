@@ -23,8 +23,8 @@ namespace TodoApp.App.DependencyInjection
 
             services.AddTransient<IEffotCalculator, EffotCalculator>();
 
-            //   services.AddBehaviors()
-            //    .AddEasyCaching(options => { options.UseInMemory(Cache.CacheDefaultName); });
+            services.AddBehaviors()
+             .AddEasyCaching(options => { options.UseInMemory(Cache.CacheDefaultName); });
 
             //  services.AddIntegrationEvents();
 
@@ -36,7 +36,7 @@ namespace TodoApp.App.DependencyInjection
         {
             return services
                 .AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>))
-                // .AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>))
+                .AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>))
                 .AddTransient(typeof(IPipelineBehavior<,>), typeof(TimeLoggingBehavior<,>))
                 .AddTransient(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>))
                 .AddTransient(typeof(IPipelineBehavior<,>), typeof(InvalidateCachingBehavior<,>));

@@ -16,7 +16,11 @@ public class GetTodos : IFeatureModule
             .Produces<Response[]>();
     }
 
-    public record Query() : IQuery<Response[]>;
+    public record Query : IQuery<Response[]>, ICacheRequest
+    {
+        public string CacheKey => TodoConstants.CachePrefix;
+        public DateTime? AbsoluteExpirationRelativeToNow { get; }
+    }
 
     public record Response(string Id, string Caption, bool IsCompleted);
 

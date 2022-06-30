@@ -19,31 +19,23 @@ public class CreateTodo : IFeatureModule
             .Produces<ProblemDetails>(StatusCodes.Status409Conflict);
     }
 
-    public class Command : ICommand
+    public class Command : ICommand, IInvalidateCacheRequest
     {
-       public string Title { get; set; } 
-     }
+       public string Title { get; set; }
+       public string PrefixCacheKey => TodoConstants.CachePrefix;
+    }
 
     public class Handler : IRequestHandler<Command>
     {
         private readonly TodoDbContext _db;
-        private readonly IValidator<Command> _validator;
 
-        public Handler(TodoDbContext db, IValidator<Command> validator)
+        public Handler(TodoDbContext db)
         {
             _db = db;
-            _validator = validator;
         }
 
         public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
         {
-            var result = await _validator.ValidateAsync(request, cancellationToken);
-
-            if (!result.IsValid)
-            {
-                throw new ValidationException(result.Errors);
-            }
-
             var todo = new Domain.Entities.Todo(request.Title);
 
             await _db.Todos.AddAsync(todo, cancellationToken);
