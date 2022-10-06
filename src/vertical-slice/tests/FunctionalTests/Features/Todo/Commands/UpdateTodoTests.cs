@@ -4,8 +4,7 @@ using TodoApp.App.Infrastructure.Persistence;
 
 namespace FunctionalTests.Features.Todo.Commands;
 
-[Collection(nameof(SliceFixture))]
-public class UpdateTodoTestsShould
+public class UpdateTodoTestsShould : IClassFixture<SliceFixture>
 {
     private readonly SliceFixture _fixture;
 
@@ -15,7 +14,6 @@ public class UpdateTodoTestsShould
     }
 
     [Fact]
-    [ResetDatabase]
     public async Task response_ok_when_update_one_todo()
     {
         // Arrange

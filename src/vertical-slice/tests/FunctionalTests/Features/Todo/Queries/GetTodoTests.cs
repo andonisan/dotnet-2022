@@ -2,8 +2,7 @@
 
 namespace FunctionalTests.Features.Todo.Queries;
 
-[Collection(nameof(SliceFixture))]
-public class GetTodoTestsShould
+public class GetTodoTestsShould: IClassFixture<SliceFixture>
 {
     private readonly SliceFixture _fixture;
 
@@ -14,7 +13,6 @@ public class GetTodoTestsShould
     }
 
     [Fact]
-    [ResetDatabase]
     public async Task response_ok_when_id_is_valid_one()
     {
         // Arrange

@@ -5,8 +5,7 @@ using Xunit.Abstractions;
 
 namespace FunctionalTests.Features.Todo.Commands;
 
-[Collection(nameof(SliceFixture))]
-public class CompleteTodoTestsShould
+public class CompleteTodoTestsShould: IClassFixture<SliceFixture>
 {
     private readonly SliceFixture _fixture;
 
@@ -16,7 +15,6 @@ public class CompleteTodoTestsShould
     }
 
     [Fact]
-    [ResetDatabase]
     public async Task response_ok_when_complete_one_todo()
     {
         // Arrange

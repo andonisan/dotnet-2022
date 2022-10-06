@@ -3,8 +3,7 @@ using TodoApp.App.Infrastructure.Persistence;
 
 namespace FunctionalTests.Features.Todo.Commands;
 
-[Collection(nameof(SliceFixture))]
-public class DeleteTodoTestsShould
+public class DeleteTodoTestsShould: IClassFixture<SliceFixture>
 {
     private readonly SliceFixture _fixture;
 
@@ -14,7 +13,6 @@ public class DeleteTodoTestsShould
     }
 
     [Fact]
-    [ResetDatabase]
     public async Task response_ok_when_delete_one_todo()
     {
         // Arrange
